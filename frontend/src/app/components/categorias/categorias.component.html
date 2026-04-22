@@ -1,0 +1,111 @@
+<div class="categorias-container">
+  <h2>📂 Mis Categorías</h2>
+  
+  <div class="categorias-grid">
+    <div class="categoria-card" *ngFor="let cat of categorias">
+      <div class="categoria-icono">{{ cat.icono }}</div>
+      <div class="categoria-nombre">{{ cat.nombre }}</div>
+      <div class="categoria-limite">💰 Límite: {{ cat.limite }} €</div>
+      <div class="categoria-acciones">
+        <button class="btn-editar" (click)="abrirModalEditar(cat)">✏️ Editar</button>
+        <button class="btn-eliminar" (click)="confirmarEliminar(cat)">🗑️ Eliminar</button>
+      </div>
+    </div>
+  </div>
+
+  <button class="btn-agregar" (click)="abrirModalAgregar()">+ Agregar Categoría</button>
+
+  <!-- MODAL AGREGAR -->
+  <div class="modal-overlay" *ngIf="mostrarModalAgregar">
+    <div class="modal-contenido">
+      <div class="modal-header">
+        <h3>➕ Nueva Categoría</h3>
+        <button class="modal-cerrar" (click)="cerrarModalAgregar()">✖️</button>
+      </div>
+      <div class="modal-body">
+        <div class="error-mensaje" *ngIf="errorMensaje">{{ errorMensaje }}</div>
+        <div class="form-group">
+          <label>📝 Nombre:</label>
+          <input type="text" [(ngModel)]="nuevaCategoria.nombre" placeholder="Ej: Comida">
+        </div>
+        <div class="form-group">
+          <label>🎨 Elige un icono:</label>
+          <div class="emoji-grid">
+            <button *ngFor="let emoji of emojisDisponibles" 
+                    class="emoji-btn"
+                    [class.emoji-selected]="nuevaCategoria.icono === emoji"
+                    (click)="seleccionarEmoji(emoji)">
+              {{ emoji }}
+            </button>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>💰 Límite mensual (€):</label>
+          <input type="number" [(ngModel)]="nuevaCategoria.limite" min="1" step="10">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-cancelar" (click)="cerrarModalAgregar()">Cancelar</button>
+        <button class="btn-guardar" (click)="agregarCategoria()">Guardar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL EDITAR -->
+  <div class="modal-overlay" *ngIf="mostrarModalEditar">
+    <div class="modal-contenido">
+      <div class="modal-header">
+        <h3>✏️ Editar Categoría</h3>
+        <button class="modal-cerrar" (click)="cerrarModalEditar()">✖️</button>
+      </div>
+      <div class="modal-body">
+        <div class="error-mensaje" *ngIf="errorMensajeEditar">{{ errorMensajeEditar }}</div>
+        <div class="form-group">
+          <label>📝 Nombre:</label>
+          <input type="text" [(ngModel)]="categoriaEditando.nombre">
+        </div>
+        <div class="form-group">
+          <label>🎨 Elige un icono:</label>
+          <div class="emoji-grid">
+            <button *ngFor="let emoji of emojisDisponibles" 
+                    class="emoji-btn"
+                    [class.emoji-selected]="categoriaEditando?.icono === emoji"
+                    (click)="seleccionarEmojiEditar(emoji)">
+              {{ emoji }}
+            </button>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>💰 Límite mensual (€):</label>
+          <input type="number" [(ngModel)]="categoriaEditando.limite" min="1" step="10">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-cancelar" (click)="cerrarModalEditar()">Cancelar</button>
+        <button class="btn-guardar" (click)="guardarEdicion()">Guardar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL ELIMINAR -->
+  <div class="modal-overlay" *ngIf="mostrarModalEliminar">
+    <div class="modal-contenido">
+      <div class="modal-header">
+        <h3>⚠️ Confirmar eliminación</h3>
+        <button class="modal-cerrar" (click)="cerrarModalEliminar()">✖️</button>
+      </div>
+      <div class="modal-body">
+        <p>¿Estás seguro de que quieres eliminar esta categoría?</p>
+        <div class="categoria-info">
+          <span class="icono">{{ categoriaAEliminar?.icono }}</span>
+          <strong>{{ categoriaAEliminar?.nombre }}</strong> - 
+          Límite: {{ categoriaAEliminar?.limite }} €
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-cancelar" (click)="cerrarModalEliminar()">Cancelar</button>
+        <button class="btn-confirmar" (click)="eliminarCategoria()">Eliminar</button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,20 @@
+<header>
+  <div class="logo">
+    <img src="/logo.png" alt="Logo" class="logo-img">
+    <h1>Control Gastos</h1>
+  </div>
+
+  <nav>
+    <button routerLink="/dashboard" routerLinkActive="active">Inicio</button>
+    <button routerLink="/gastos" routerLinkActive="active">Gastos</button>
+    <button routerLink="/ingresos" routerLinkActive="active">Ingresos</button>
+    <button routerLink="/categorias" routerLinkActive="active">Categorías</button>
+  </nav>
+
+  <div class="user-actions">
+    <button (click)="cambiarTema()">
+      {{ modoOscuro ? '☀️' : '🌙' }}
+    </button>
+    <button (click)="logout()">Salir</button>
+  </div>
+</header>

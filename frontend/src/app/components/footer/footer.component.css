@@ -1,0 +1,97 @@
+/* ========== FOOTER PRINCIPAL ========== */
+footer {
+  background: #eef2ff;  /* Mismo azul clarito que el header */
+  border-top: 1px solid rgba(0, 0, 0, 0.05);
+  padding: 1.5rem 2rem;
+  margin-top: 3rem;
+  text-align: center;
+}
+
+.footer-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.footer-content p {
+  margin: 0;
+  color: #555;
+  font-size: 0.9rem;
+}
+
+.footer-links {
+  display: flex;
+  gap: 2rem;
+  margin-top: 0.5rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.footer-links a {
+  color: #667eea;
+  text-decoration: none;
+  font-size: 0.85rem;
+  transition: all 0.3s ease;
+}
+
+.footer-links a:hover {
+  color: #764ba2;
+  text-decoration: underline;
+}
+
+.footer-icon {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.footer-icon span {
+  font-size: 1.3rem;
+  opacity: 0.8;
+  transition: transform 0.3s ease;
+}
+
+.footer-icon span:hover {
+  transform: translateY(-3px);
+}
+
+/* ========== MODO OSCURO ========== */
+:host-context(.dark-mode) footer {
+  background: #1e2a3a;
+  border-top-color: rgba(255, 255, 255, 0.05);
+}
+
+:host-context(.dark-mode) .footer-content p {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+:host-context(.dark-mode) .footer-links a {
+  color: #a8c0ff;
+}
+
+:host-context(.dark-mode) .footer-links a:hover {
+  color: #c084fc;
+}
+
+/* ========== RESPONSIVE ========== */
+@media (max-width: 768px) {
+  footer {
+    padding: 1rem;
+    margin-top: 2rem;
+  }
+  
+  .footer-links {
+    gap: 1rem;
+  }
+  
+  .footer-links a {
+    font-size: 0.75rem;
+  }
+  
+  .footer-icon span {
+    font-size: 1rem;
+  }
+}

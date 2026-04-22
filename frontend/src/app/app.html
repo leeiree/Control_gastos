@@ -1,1 +1,13 @@
-<router-outlet></router-outlet>
+<!-- Pantalla de Login -->
+<div *ngIf="!isLoggedIn">
+  <app-login (loginSuccess)="onLoginSuccess()"></app-login>
+</div>
+
+<!-- Dashboard (se ve solo después de login) -->
+<div *ngIf="isLoggedIn" [class.dark-mode]="isDarkMode">
+  <app-header (toggleTheme)="toggleTheme()"></app-header>
+  <main>
+    <router-outlet></router-outlet>
+  </main>
+  <app-footer></app-footer>
+</div>

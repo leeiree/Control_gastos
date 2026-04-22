@@ -1,9 +1,12 @@
 import { Routes } from '@angular/router';
-import { LoginComponent } from './login/login.component';
-import { DashboardComponent } from './dashboard/dashboard.component';
+import { DashboardComponent } from './components/dashboard/dashboard.component';
+import { GastosComponent } from './components/gastos/gastos.component';
+import { CategoriasComponent } from './components/categorias/categorias.component';
 
 export const routes: Routes = [
-  { path: '', redirectTo: '/login', pathMatch: 'full' },
-  { path: 'login', component: LoginComponent },
-  { path: 'dashboard', component: DashboardComponent }
+  { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
+  { path: 'dashboard', component: DashboardComponent },
+  { path: 'gastos', component: GastosComponent },
+  { path: 'categorias', component: CategoriasComponent },
+  { path: '**', redirectTo: '/dashboard' }
 ];

@@ -1,0 +1,28 @@
+<div class="dashboard">
+  <div class="filtros">
+    <label>📅 Mes:</label>
+    <select [(ngModel)]="mesSeleccionado">
+      <option *ngFor="let mes of meses; let i=index" [value]="i">{{ mes }}</option>
+    </select>
+    
+    <label>Año:</label>
+    <select [(ngModel)]="anioSeleccionado">
+      <option *ngFor="let anio of anios" [value]="anio">{{ anio }}</option>
+    </select>
+  </div>
+
+  <div class="tarjetas">
+    <div class="tarjeta">
+      <h3>Total Gastos</h3>
+      <p>{{ totalGastos }} €</p>
+    </div>
+    <div class="tarjeta">
+      <h3>Gasto este mes</h3>
+      <p>{{ gastosEsteMes }} €</p>
+    </div>
+    <div class="tarjeta">
+      <h3>Ahorro del mes</h3>
+      <p>{{ ahorroMes }} €</p>
+    </div>
+  </div>
+</div>

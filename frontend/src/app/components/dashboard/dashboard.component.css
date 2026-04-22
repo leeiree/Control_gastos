@@ -1,0 +1,5 @@
+.dashboard { padding: 2rem; }
+.filtros { display: flex; gap: 1rem; margin-bottom: 2rem; }
+.tarjetas { display: flex; gap: 1rem; }
+.tarjeta { flex: 1; padding: 1rem; background: #f0f0f0; border-radius: 8px; text-align: center; }
+.tarjeta p { font-size: 1.5rem; font-weight: bold; color: #007bff; }
