@@ -1,0 +1,140 @@
+<div class="ingresos-container">
+  <h2>Mis ingresos</h2>
+  
+  <div class="filtros">
+    <label>📅 Mes:</label>
+    <select [(ngModel)]="mesSeleccionado" (change)="cambiarFiltro()">
+      <option *ngFor="let mes of meses; let i=index" [value]="i">{{ mes }}</option>
+    </select>
+    
+    <label>📆 Año:</label>
+    <select [(ngModel)]="anioSeleccionado" (change)="cambiarFiltro()">
+      <option *ngFor="let anio of anios" [value]="anio">{{ anio }}</option>
+    </select>
+  </div>
+
+  <button class="btn-agregar" (click)="abrirModalAgregar()">+ Agregar Ingreso</button>
+
+  <div class="tabla-ingresos">
+    <table>
+      <thead>
+        <tr>
+          <th>Concepto</th>
+          <th>Categoría</th>
+          <th>Cantidad</th>
+          <th>Fecha</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let ingreso of ingresosFiltrados">
+          <td><strong>{{ ingreso.concepto }}</strong></td>
+          <td class="categoria-cell">
+            <span class="categoria-{{ ingreso.categoria | lowercase }}">{{ ingreso.categoria }}</span>
+          </td>
+          <td class="cantidad-verde">{{ ingreso.cantidad }} €</td>
+          <td>{{ ingreso.fecha }}</td>
+          <td class="acciones">
+            <button class="btn-editar" (click)="abrirModalEditar(ingreso)" title="Editar">✏️</button>
+            <button class="btn-eliminar" (click)="confirmarEliminar(ingreso)" title="Eliminar">🗑️</button>
+          </td>
+        </tr>
+        <tr *ngIf="ingresosFiltrados.length === 0">
+          <td colspan="5" class="sin-datos">No hay ingresos para este mes</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- MODAL AGREGAR -->
+<div class="modal-overlay" *ngIf="mostrarModalAgregar">
+  <div class="modal-contenido">
+    <div class="modal-header">
+      <h3>➕ Nuevo Ingreso</h3>
+      <button class="modal-cerrar" (click)="cerrarModalAgregar()">✖️</button>
+    </div>
+    <div class="modal-body">
+      <div class="error-mensaje" *ngIf="errorMensaje">{{ errorMensaje }}</div>
+      <div class="form-group">
+        <label>📝 Concepto:</label>
+        <input type="text" [(ngModel)]="nuevoIngreso.concepto" placeholder="Ej: Salario">
+      </div>
+      <div class="form-group">
+        <label>📂 Categoría:</label>
+        <select [(ngModel)]="nuevoIngreso.categoria">
+          <option *ngFor="let cat of categoriasDisponibles" [value]="cat">{{ cat }}</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>💰 Cantidad (€):</label>
+        <input type="number" [(ngModel)]="nuevoIngreso.cantidad" placeholder="0.00" min="0" step="10">
+      </div>
+      <div class="form-group">
+        <label>📅 Fecha (DD/MM/YYYY):</label>
+        <input type="text" [(ngModel)]="nuevoIngreso.fecha" placeholder="15/04/2026">
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-cancelar" (click)="cerrarModalAgregar()">Cancelar</button>
+      <button class="btn-guardar" (click)="agregarIngreso()">Guardar</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL EDITAR -->
+<div class="modal-overlay" *ngIf="mostrarModalEditar">
+  <div class="modal-contenido">
+    <div class="modal-header">
+      <h3>✏️ Editar Ingreso</h3>
+      <button class="modal-cerrar" (click)="cerrarModalEditar()">✖️</button>
+    </div>
+    <div class="modal-body">
+      <div class="error-mensaje" *ngIf="errorMensajeEditar">{{ errorMensajeEditar }}</div>
+      <div class="form-group">
+        <label>📝 Concepto:</label>
+        <input type="text" [(ngModel)]="ingresoEditando.concepto">
+      </div>
+      <div class="form-group">
+        <label>📂 Categoría:</label>
+        <select [(ngModel)]="ingresoEditando.categoria">
+          <option *ngFor="let cat of categoriasDisponibles" [value]="cat">{{ cat }}</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>💰 Cantidad (€):</label>
+        <input type="number" [(ngModel)]="ingresoEditando.cantidad" min="0" step="10">
+      </div>
+      <div class="form-group">
+        <label>📅 Fecha (DD/MM/YYYY):</label>
+        <input type="text" [(ngModel)]="ingresoEditando.fecha" placeholder="DD/MM/YYYY">
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-cancelar" (click)="cerrarModalEditar()">Cancelar</button>
+      <button class="btn-guardar" (click)="guardarEdicion()">Guardar</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL ELIMINAR -->
+<div class="modal-overlay" *ngIf="mostrarModalEliminar">
+  <div class="modal-contenido">
+    <div class="modal-header">
+      <h3>⚠️ Confirmar eliminación</h3>
+      <button class="modal-cerrar" (click)="cerrarModalEliminar()">✖️</button>
+    </div>
+    <div class="modal-body">
+      <p>¿Estás seguro de que quieres eliminar este ingreso?</p>
+      <div class="ingreso-info">
+        <strong>{{ ingresoAEliminar?.concepto }}</strong> - 
+        {{ ingresoAEliminar?.categoria }} - 
+        {{ ingresoAEliminar?.cantidad }} €
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-cancelar" (click)="cerrarModalEliminar()">Cancelar</button>
+      <button class="btn-confirmar" (click)="eliminarIngreso()">Eliminar</button>
+    </div>
+  </div>
+</div>
