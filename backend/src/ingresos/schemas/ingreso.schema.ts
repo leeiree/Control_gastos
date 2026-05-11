@@ -19,4 +19,4 @@ export class Ingreso extends Document {
     usuarioId: string;
 }
 
-export const IngresoShema = SchemaFactory.createForClass(Ingreso);
+export const IngresoSchema = SchemaFactory.createForClass(Ingreso);
