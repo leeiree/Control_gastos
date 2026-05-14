@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IngresoService } from '../../services/ingresos.service';
 import { CategoriaService } from '../../services/categoria.service';
+import { ActualizacionService } from '../../services/actualizacion.service';
 
 @Component({
   selector: 'app-ingresos',
@@ -13,8 +14,14 @@ import { CategoriaService } from '../../services/categoria.service';
 })
 export class IngresosComponent implements DoCheck, OnInit {
   ingresos: any[] = [];
-  categoriasDisponibles: string[] = [];
-
+  categoriasDisponibles: string[] = [
+    'Salario',
+    'Beca',
+    'Regalo',
+    'Venta',
+    'Extra',
+    'Otros'
+  ];
   meses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
   anios = [2023, 2024, 2025, 2026];
   mesSeleccionado = new Date().getMonth();
@@ -41,6 +48,7 @@ export class IngresosComponent implements DoCheck, OnInit {
   constructor(
     private ingresoService: IngresoService,
     private categoriaService: CategoriaService,
+    private actualizacionService: ActualizacionService,
     private cdr: ChangeDetectorRef
   ) {}
 
@@ -78,17 +86,27 @@ export class IngresosComponent implements DoCheck, OnInit {
   }
 
   cargarCategorias() {
-    const usuarioId = localStorage.getItem('usuarioId');
-    if (!usuarioId) return;
-    
-    this.categoriaService.getCategorias(usuarioId).subscribe({
-      next: (data) => {
-        this.categoriasDisponibles = data.map(c => c.nombre);
-        this.cdr.detectChanges();
-      },
-      error: (error) => console.error('Error:', error)
-    });
+  const usuarioId = localStorage.getItem('usuarioId');
+
+  if (!usuarioId) {
+    return;
   }
+
+  this.categoriaService.getCategorias(usuarioId).subscribe({
+    next: (data) => {
+      const categoriasBackend = data.map(c => c.nombre);
+
+      if (categoriasBackend.length > 0) {
+        this.categoriasDisponibles = categoriasBackend;
+      }
+
+      this.cdr.detectChanges();
+    },
+    error: (error) => {
+      console.error('Error:', error);
+    }
+  });
+}
 
   get ingresosFiltrados() {
     if (!this.ingresos || this.ingresos.length === 0) return [];
@@ -143,6 +161,7 @@ export class IngresosComponent implements DoCheck, OnInit {
     this.ingresoService.createIngreso(this.nuevoIngreso).subscribe({
       next: () => {
         this.cargarIngresos();
+        this.actualizacionService.notificarActualizacion();
         this.cerrarModalAgregar();
       },
       error: (error) => {
@@ -182,6 +201,7 @@ export class IngresosComponent implements DoCheck, OnInit {
     this.ingresoService.updateIngreso(this.ingresoEditando._id, this.ingresoEditando).subscribe({
       next: () => {
         this.cargarIngresos();
+        this.actualizacionService.notificarActualizacion();
         this.cerrarModalEditar();
       },
       error: (error) => {
@@ -201,6 +221,7 @@ export class IngresosComponent implements DoCheck, OnInit {
       this.ingresoService.deleteIngreso(this.ingresoAEliminar._id).subscribe({
         next: () => {
           this.cargarIngresos();
+          this.actualizacionService.notificarActualizacion();
           this.cerrarModalEliminar();
         },
         error: (error) => console.error('Error:', error)

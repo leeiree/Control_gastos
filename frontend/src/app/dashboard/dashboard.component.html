@@ -1,15 +1,58 @@
-<div class="dashboard-container">
-  <div class="navbar">
-    <h2>Control de Gastos</h2>
-    <button (click)="logout()" class="btn-logout">Cerrar Sesión</button>
-  </div>
-  
-  <div class="welcome-card">
-    <h1>¡Bienvenido, {{ user?.name }}!</h1>
-    <p>Email: {{ user?.email }}</p>
+<div class="dashboard">
+  <h2>📊 Dashboard</h2>
+
+  <div class="filtros">
+    <label>📅 Mes:</label>
+    <select [(ngModel)]="mesSeleccionado" (change)="cambiarFiltro()">
+      <option *ngFor="let mes of meses; let i=index" [value]="i">{{ mes }}</option>
+    </select>
+
+    <label>📆 Año:</label>
+    <select [(ngModel)]="anioSeleccionado" (change)="cambiarFiltro()">
+      <option *ngFor="let anio of anios" [value]="anio">{{ anio }}</option>
+    </select>
   </div>
 
-  <div class="content">
-    <p>Aquí irá el dashboard de control de gastos</p>
+  <!-- Tarjetas resumen -->
+  <div class="tarjetas">
+    <div class="tarjeta tarjeta-ingresos">
+      <div class="tarjeta-icono">💰</div>
+      <h3>Ingresos</h3>
+      <p class="cantidad-positiva">{{ totalIngresosMes }} €</p>
+    </div>
+
+    <div class="tarjeta tarjeta-gastos">
+      <div class="tarjeta-icono">💸</div>
+      <h3>Gastos</h3>
+      <p class="cantidad-negativa">{{ totalGastosMes }} €</p>
+    </div>
+
+    <div class="tarjeta" [class.tarjeta-positivo]="ahorroMes >= 0" [class.tarjeta-negativo]="ahorroMes < 0">
+      <div class="tarjeta-icono">{{ ahorroMes >= 0 ? '📈' : '📉' }}</div>
+      <h3>Ahorro</h3>
+      <p [class.cantidad-positiva]="ahorroMes >= 0" [class.cantidad-negativa]="ahorroMes < 0">
+        {{ ahorroMes }} €
+      </p>
+    </div>
+  </div>
+
+  <!-- Desglose por categoría -->
+  <div class="desglose" *ngIf="gastosDesglosados.length > 0">
+    <h3>📂 Gastos por categoría</h3>
+    <div class="desglose-lista">
+      <div class="desglose-item" *ngFor="let item of gastosDesglosados">
+        <span class="desglose-categoria">{{ item.categoria }}</span>
+        <div class="desglose-barra-contenedor">
+          <div class="desglose-barra"
+               [style.width.%]="(item.total / totalGastosMes) * 100">
+          </div>
+        </div>
+        <span class="desglose-cantidad">{{ item.total }} €</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="sin-datos" *ngIf="gastosDesglosados.length === 0">
+    <p>No hay datos para {{ meses[mesSeleccionado] }} {{ anioSeleccionado }}</p>
   </div>
 </div>

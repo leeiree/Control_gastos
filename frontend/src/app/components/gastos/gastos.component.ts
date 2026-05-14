@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { GastoService } from '../../services/gasto.service';
 import { CategoriaService } from '../../services/categoria.service';
+import { ActualizacionService } from '../../services/actualizacion.service';
 
 @Component({
   selector: 'app-gastos',
@@ -41,7 +42,8 @@ export class GastosComponent implements DoCheck, OnInit {
   constructor(
     private gastoService: GastoService,
     private categoriaService: CategoriaService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private actualizacionService: ActualizacionService
   ) { }
 
   ngOnInit(): void {
@@ -197,6 +199,7 @@ export class GastosComponent implements DoCheck, OnInit {
       next: (response) => {
         console.log('✅ Gasto creado:', response);
         this.cargarGastos();
+        this.actualizacionService.notificarActualizacion();
         this.cerrarModalAgregar();
       },
       error: (error) => {
@@ -242,6 +245,7 @@ export class GastosComponent implements DoCheck, OnInit {
       next: (response) => {
         console.log('✅ Gasto actualizado:', response);
         this.cargarGastos();
+        this.actualizacionService.notificarActualizacion();
         this.cerrarModalEditar();
       },
       error: (error) => {
@@ -265,6 +269,7 @@ export class GastosComponent implements DoCheck, OnInit {
         next: (response) => {
           console.log('✅ Gasto eliminado:', response);
           this.cargarGastos();
+          this.actualizacionService.notificarActualizacion();
           this.cerrarModalEliminar();
         },
         error: (error) => {

@@ -29,7 +29,10 @@ export class LoginComponent {
       next: (response) => {
         console.log('Login exitoso:', response);
         
-        const usuarioId = response._id || response.id || response.user?.id;
+        const user = response.user|| response;
+        localStorage.setItem('user', JSON.stringify(user));
+
+        const usuarioId = user._id || user.id;
         if (usuarioId) {
           localStorage.setItem('usuarioId', usuarioId);
         }
