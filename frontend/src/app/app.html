@@ -1,9 +1,9 @@
-<!-- Pantalla de Login -->
+<!-- Usar router-outlet para todas las pantallas cuando no hay sesión -->
 <div *ngIf="!isLoggedIn">
-  <app-login (loginSuccess)="onLoginSuccess()"></app-login>
+  <router-outlet></router-outlet>
 </div>
 
-<!-- Dashboard (se ve solo después de login) -->
+<!-- Pantalla principal cuando está logueado -->
 <div *ngIf="isLoggedIn" [class.dark-mode]="isDarkMode">
   <app-header (toggleTheme)="toggleTheme()"></app-header>
   <main>

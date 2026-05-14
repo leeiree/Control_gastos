@@ -1,28 +1,115 @@
-<div class="dashboard">
+<div class="dashboard-container">
+  <h2>📊 Inicio</h2>
+
+  <!-- Filtros -->
   <div class="filtros">
-    <label>📅 Mes:</label>
-    <select [(ngModel)]="mesSeleccionado">
-      <option *ngFor="let mes of meses; let i=index" [value]="i">{{ mes }}</option>
-    </select>
-    
-    <label>Año:</label>
-    <select [(ngModel)]="anioSeleccionado">
-      <option *ngFor="let anio of anios" [value]="anio">{{ anio }}</option>
-    </select>
+    <div class="filtro-group">
+      <label>📅 Mes:</label>
+      <select [(ngModel)]="mesSeleccionado" (change)="cambiarFiltro()">
+        <option *ngFor="let mes of meses; let i=index" [value]="i">{{ mes }}</option>
+      </select>
+    </div>
+
+    <div class="filtro-group">
+      <label>📆 Año:</label>
+      <select [(ngModel)]="anioSeleccionado" (change)="cambiarFiltro()">
+        <option *ngFor="let anio of anios" [value]="anio">{{ anio }}</option>
+      </select>
+    </div>
   </div>
 
-  <div class="tarjetas">
-    <div class="tarjeta">
-      <h3>Total Gastos</h3>
-      <p>{{ totalGastos }} €</p>
+  <!-- Tarjetas de resumen -->
+  <div class="dashboard-cards">
+    <div class="card ingresos">
+      <div class="card-icon">💰</div>
+      <div class="card-info">
+        <h3>Ingresos</h3>
+        <p class="cantidad">{{ totalIngresosMes | number:'1.2-2' }} €</p>
+      </div>
     </div>
-    <div class="tarjeta">
-      <h3>Gasto este mes</h3>
-      <p>{{ gastosEsteMes }} €</p>
+
+    <div class="card gastos">
+      <div class="card-icon">💸</div>
+      <div class="card-info">
+        <h3>Gastos</h3>
+        <p class="cantidad">{{ totalGastosMes | number:'1.2-2' }} €</p>
+      </div>
     </div>
-    <div class="tarjeta">
-      <h3>Ahorro del mes</h3>
-      <p>{{ ahorroMes }} €</p>
+
+    <div class="card ahorro" [ngClass]="{'positivo': ahorroMes >= 0, 'negativo': ahorroMes < 0}">
+      <div class="card-icon">🏦</div>
+      <div class="card-info">
+        <h3>Ahorro</h3>
+        <p class="cantidad">{{ ahorroMes | number:'1.2-2' }} €</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Gráficos -->
+  <div class="graficos">
+    <!-- Gráfico de barras -->
+    <div class="grafico-card">
+      <div class="grafico-header">
+        <h3>📈 Evolución Mensual</h3>
+        <p class="grafico-subtitle">Últimos 6 meses</p>
+      </div>
+      <div class="grafico-contenido">
+        <canvas baseChart [data]="barChartData" [options]="barChartOptions" [type]="barChartType">
+        </canvas>
+      </div>
+    </div>
+
+    <!-- Gráfico de tarta -->
+    <div class="grafico-card">
+      <div class="grafico-header">
+        <h3>🥧 Gastos por Categoría</h3>
+        <p class="grafico-subtitle">Mes seleccionado</p>
+      </div>
+      <div class="grafico-contenido">
+        <canvas baseChart [data]="pieChartData" [options]="pieChartOptions" [type]="pieChartType">
+        </canvas>
+      </div>
+      <div class="grafico-leyenda" *ngIf="gastosDesglosados.length > 0">
+        <div class="leyenda-item" *ngFor="let item of gastosDesglosados">
+          <span class="leyenda-color" [style.backgroundColor]="getColor(item.categoria)"></span>
+          <span class="leyenda-categoria">{{ item.categoria }}</span>
+          <span class="leyenda-total">{{ item.total | number:'1.2-2' }} €</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Barras de progreso por categoría -->
+  <div class="progreso-container" *ngIf="gastosDesglosados.length > 0">
+    <h3>Progreso de gastos por categoría</h3>
+    <div class="progreso-categoria" *ngFor="let item of gastosDesglosados">
+      <div class="progreso-header">
+        <div class="progreso-titulo">
+          <span class="progreso-icono">{{ getIcono(item.categoria) }}</span>
+          <span class="progreso-nombre">{{ item.categoria }}</span>
+          <span class="progreso-porcentaje">{{ (item.total / getLimiteCategoria(item.categoria) * 100) | number:'1.0-0'
+            }}%</span>
+        </div>
+        <div class="progreso-cantidades">
+          <span class="progreso-gastado">{{ item.total | number:'1.2-2' }} €</span>
+          <span class="progreso-limite">/ {{ getLimiteCategoria(item.categoria) }} €</span>
+        </div>
+      </div>
+      <div class="barra-progreso-wrapper">
+        <div class="barra-progreso">
+          <div class="barra-progreso-lleno" [style.width.%]="(item.total / getLimiteCategoria(item.categoria) * 100)"
+            [style.backgroundColor]="getColorProgreso(item.total, getLimiteCategoria(item.categoria))">
+          </div>
+        </div>
+      </div>
+      <div class="progreso-estado">
+        <div class="progreso-restante" *ngIf="getLimiteCategoria(item.categoria) - item.total > 0">
+          💚 Te quedan {{ getLimiteCategoria(item.categoria) - item.total | number:'1.2-2' }} € para tu límite
+        </div>
+        <div class="progreso-restante alerta" *ngIf="getLimiteCategoria(item.categoria) - item.total <= 0">
+          ⚠️ ¡Has superado tu límite de {{ getLimiteCategoria(item.categoria) }} €!
+        </div>
+      </div>
     </div>
   </div>
 </div>

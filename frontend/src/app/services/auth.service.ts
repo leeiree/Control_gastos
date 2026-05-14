@@ -10,8 +10,14 @@ export class AuthService {
 
   constructor(private http: HttpClient) { }
 
+  // LOGIN
   login(email: string, password: string): Observable<any> {
     return this.http.post(`${this.apiUrl}/login`, { email, password });
+  }
+
+  // REGISTRO (AÑADIR ESTO)
+  register(name: string, email: string, password: string): Observable<any> {
+    return this.http.post(`${this.apiUrl}/register`, { name, email, password });
   }
 
   setUser(user: any): void {
@@ -25,6 +31,7 @@ export class AuthService {
 
   logout(): void {
     localStorage.removeItem('user');
+    localStorage.removeItem('usuarioId');  // ← También elimina el usuarioId
   }
 
   isLoggedIn(): boolean {

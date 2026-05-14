@@ -1,9 +1,11 @@
+/* ========== CONTENEDOR PRINCIPAL ========== */
 .ingresos-container {
   padding: 2rem;
   max-width: 1200px;
   margin: 0 auto;
 }
 
+/* ========== TÍTULO ========== */
 .ingresos-container h2 {
   background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
   background-clip: text;
@@ -61,6 +63,7 @@
   box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.3);
 }
 
+/* ========== BOTÓN AGREGAR ========== */
 .btn-agregar {
   background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
   color: white;
@@ -71,13 +74,22 @@
   font-weight: 600;
   cursor: pointer;
   margin-bottom: 1.5rem;
+  transition: all 0.3s;
+  box-shadow: 0 4px 10px rgba(40, 167, 69, 0.4);
+  display: inline-block;
 }
 
+.btn-agregar:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(40, 167, 69, 0.5);
+}
+
+/* ========== TABLA ========== */
 .tabla-ingresos {
   background: white;
   border-radius: 15px;
   overflow: hidden;
-  box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
 }
 
 table {
@@ -90,20 +102,29 @@ th {
   color: white;
   padding: 1rem;
   text-align: center;
+  font-weight: 600;
+  font-size: 1rem;
 }
 
 td {
   padding: 1rem;
   border-bottom: 1px solid #f0f0f0;
   text-align: center;
+  vertical-align: middle;
 }
 
+tr:hover td {
+  background: #f8f9ff;
+}
+
+/* ========== CANTIDAD EN VERDE ========== */
 .cantidad-verde {
   font-weight: 700;
   color: #28a745;
   font-size: 1.1rem;
 }
 
+/* ========== BOTONES DE ACCIÓN ========== */
 .acciones {
   display: flex;
   gap: 0.75rem;
@@ -122,13 +143,26 @@ td {
   display: flex;
   align-items: center;
   justify-content: center;
+  transition: all 0.2s ease;
   background-color: #f0f0f0;
 }
 
 .btn-editar { color: #ff9800; }
 .btn-eliminar { color: #dc3545; }
 
-/* ========== MODALES MEJORADOS ========== */
+.btn-editar:hover {
+  background-color: #ff9800;
+  color: white;
+  transform: scale(1.1);
+}
+
+.btn-eliminar:hover {
+  background-color: #dc3545;
+  color: white;
+  transform: scale(1.1);
+}
+
+/* ========== MODALES ========== */
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -171,7 +205,6 @@ td {
   align-items: center;
   padding: 1.2rem 1.5rem;
   background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
-  border-radius: 24px 24px 0 0;
 }
 
 .modal-header h3 {
@@ -275,6 +308,23 @@ td {
   box-shadow: 0 4px 10px rgba(40, 167, 69, 0.3);
 }
 
+.btn-confirmar {
+  background: #dc3545;
+  color: white;
+  padding: 0.6rem 1.5rem;
+  border: none;
+  border-radius: 40px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-confirmar:hover {
+  transform: scale(1.02);
+  box-shadow: 0 4px 10px rgba(220, 53, 69, 0.3);
+}
+
 /* Mensaje de error */
 .error-mensaje {
   background: #f8d7da;
@@ -286,7 +336,58 @@ td {
   font-size: 0.85rem;
 }
 
+/* Sin datos */
+.sin-datos {
+  text-align: center;
+  padding: 2rem;
+  color: #999;
+}
+
 /* ========== MODO OSCURO ========== */
+:host-context(.dark-mode) .filtros {
+  background: linear-gradient(135deg, #1e1e2f 0%, #2a2a3b 100%);
+}
+
+:host-context(.dark-mode) .filtros label {
+  color: #e0e0e0;
+}
+
+:host-context(.dark-mode) .filtros select {
+  background-color: #3a3a4d;
+  color: white;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23a8c0ff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+}
+
+:host-context(.dark-mode) .btn-agregar {
+  background: linear-gradient(135deg, #1b5e20 0%, #0d8a5c 100%);
+  color: white;
+}
+
+:host-context(.dark-mode) .btn-agregar:hover {
+  background: linear-gradient(135deg, #2e7d32 0%, #14a46a 100%);
+}
+
+:host-context(.dark-mode) .tabla-ingresos {
+  background: #1e1e2f;
+}
+
+:host-context(.dark-mode) th {
+  background: linear-gradient(135deg, #1b5e20 0%, #0d8a5c 100%);
+}
+
+:host-context(.dark-mode) td {
+  color: #d0d0d0;
+  border-bottom-color: #3a3a4d;
+}
+
+:host-context(.dark-mode) tr:hover td {
+  background: #2a2a3f;
+}
+
+:host-context(.dark-mode) .cantidad-verde {
+  color: #4ade80;
+}
+
 :host-context(.dark-mode) .modal-contenido {
   background: #2a2a3b;
 }
@@ -320,10 +421,54 @@ td {
   background: #5a6268;
 }
 
+:host-context(.dark-mode) .btn-guardar {
+  background: linear-gradient(135deg, #1b5e20 0%, #0d8a5c 100%);
+}
+
+:host-context(.dark-mode) .btn-guardar:hover {
+  background: linear-gradient(135deg, #2e7d32 0%, #14a46a 100%);
+}
+
+:host-context(.dark-mode) .error-mensaje {
+  background: #2a1a1a;
+  color: #f8d7da;
+}
+
+:host-context(.dark-mode) .sin-datos {
+  color: #aaa;
+}
+
 /* ========== RESPONSIVE ========== */
 @media (max-width: 768px) {
-  .modal-body {
-    padding: 1.2rem;
+  .ingresos-container {
+    padding: 1rem;
+  }
+  
+  .filtros {
+    flex-direction: column;
+    gap: 1rem;
+    align-items: flex-start;
+  }
+  
+  .filtros select {
+    width: 100%;
+    min-width: auto;
+  }
+  
+  th, td {
+    padding: 0.5rem;
+    font-size: 0.8rem;
+  }
+  
+  .btn-editar, .btn-eliminar {
+    width: 28px;
+    height: 28px;
+    font-size: 0.9rem;
+  }
+  
+  .modal-contenido {
+    width: 95%;
+    margin: 1rem;
   }
   
   .modal-footer {
@@ -331,51 +476,9 @@ td {
   }
   
   .btn-cancelar,
-  .btn-guardar {
+  .btn-guardar,
+  .btn-confirmar {
     width: 100%;
     text-align: center;
-  }
-}
-
-.btn-cancelar {
-  background: #6c757d;
-  color: white;
-  padding: 0.6rem 1.5rem;
-  border: none;
-  border-radius: 40px;
-  cursor: pointer;
-}
-
-.btn-guardar, .btn-confirmar {
-  background: #28a745;
-  color: white;
-  padding: 0.6rem 1.5rem;
-  border: none;
-  border-radius: 40px;
-  cursor: pointer;
-}
-
-.btn-confirmar {
-  background: #dc3545;
-}
-
-.sin-datos {
-  text-align: center;
-  padding: 2rem;
-  color: #999;
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-  .ingresos-container {
-    padding: 1rem;
-  }
-  .filtros {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-  th, td {
-    padding: 0.5rem;
-    font-size: 0.8rem;
   }
 }

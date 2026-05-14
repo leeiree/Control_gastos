@@ -1,33 +1,59 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { UsersService } from '../users/users.service';
+import { Injectable, ConflictException, UnauthorizedException } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
+import * as bcrypt from 'bcrypt';
+import { User } from '../users/schemas/user.schema';
 
 @Injectable()
 export class AuthService {
-  constructor(private usersService: UsersService) {}
+  constructor(
+    @InjectModel(User.name) private userModel: Model<User>,
+  ) {}
 
-  async register(email: string, password: string, name: string) {
-    const existingUser = await this.usersService.findByEmail(email);
+  async register(name: string, email: string, password: string) {
+    // Verificar si el usuario ya existe
+    const existingUser = await this.userModel.findOne({ email });
     if (existingUser) {
-      throw new UnauthorizedException('El email ya está registrado');
+      throw new ConflictException('El email ya está registrado');
     }
 
-    const newUser = await this.usersService.create({ email, password, name });
-    const { password: _, ...result } = newUser.toObject();
-    return result;
+    // Encriptar contraseña
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    // Crear nuevo usuario
+    const newUser = new this.userModel({
+      name: name,
+      email: email,
+      password: hashedPassword
+    });
+
+    await newUser.save();
+
+    return {
+      message: 'Usuario registrado correctamente',
+      user: {
+        id: newUser._id,
+        name: newUser.name,
+        email: newUser.email
+      }
+    };
   }
 
   async login(email: string, password: string) {
-    const user = await this.usersService.findByEmail(email);
+    const user = await this.userModel.findOne({ email });
     if (!user) {
       throw new UnauthorizedException('Email o contraseña incorrectos');
     }
 
-    const isValid = await this.usersService.validatePassword(password, user.password);
-    if (!isValid) {
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    if (!isPasswordValid) {
       throw new UnauthorizedException('Email o contraseña incorrectos');
     }
 
-    const { password: _, ...result } = user.toObject();
-    return result;
+    return {
+      id: user._id,
+      name: user.name,
+      email: user.email
+    };
   }
 }
