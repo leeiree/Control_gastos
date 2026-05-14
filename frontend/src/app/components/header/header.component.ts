@@ -1,6 +1,6 @@
 import { Component, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Router } from '@angular/router';
 
 @Component({
   selector: 'app-header',
@@ -13,12 +13,18 @@ export class HeaderComponent {
   @Output() toggleTheme = new EventEmitter<void>();
   modoOscuro = false;
 
+  constructor(private router: Router) {}
+
   cambiarTema() {
     this.modoOscuro = !this.modoOscuro;
     this.toggleTheme.emit();
   }
 
   logout() {
-    console.log('Cerrar sesión');
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    localStorage.removeItem('usuarioId');
+
+    this.router.navigate(['/login']);
   }
 }

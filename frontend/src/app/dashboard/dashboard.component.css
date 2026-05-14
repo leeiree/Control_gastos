@@ -171,3 +171,64 @@
   .tarjetas { grid-template-columns: 1fr; }
   .desglose-item { grid-template-columns: 100px 1fr 70px; }
 }
+
+/*==== GRÁFICOS ====*/
+.graficos {
+  display: flex;
+  gap: 2rem;
+  margin: 2rem 0;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.grafico-card {
+  flex: 1;
+  min-width: 300px;
+  max-width: 450px;
+  background: white;
+  border-radius: 20px;
+  padding: 1rem;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
+  transition: transform 0.3s;
+}
+
+.grafico-card:hover {
+  transform: translateY(-5px);
+}
+
+.grafico-card h3 {
+  text-align: center;
+  color: #333;
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid #f0f0f0;
+}
+
+.grafico-card canvas {
+  max-height: 250px;
+  width: 100%;
+}
+
+/* Modo oscuro para gráficos */
+:host-context(.dark-mode) .grafico-card {
+  background: #1e1e2f;
+}
+
+:host-context(.dark-mode) .grafico-card h3 {
+  color: #e0e0e0;
+  border-bottom-color: #3a3a4d;
+}
+
+@media (max-width: 768px) {
+  .graficos {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .grafico-card {
+    width: 100%;
+    max-width: 100%;
+  }
+}

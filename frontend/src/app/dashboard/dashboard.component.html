@@ -1,5 +1,5 @@
 <div class="dashboard">
-  <h2>📊 Dashboard</h2>
+  <h2>Inicio</h2>
 
   <div class="filtros">
     <label>📅 Mes:</label>
@@ -33,6 +33,26 @@
       <p [class.cantidad-positiva]="ahorroMes >= 0" [class.cantidad-negativa]="ahorroMes < 0">
         {{ ahorroMes }} €
       </p>
+    </div>
+  </div>
+
+   <!-- Gráficos -->
+  <div class="graficos">
+    <div class="grafico-card">
+      <h3> 📊 Evolución mensual (últimos 6 meses)</h3>
+      <canvas baseChart
+        [data]="barChartData"
+        [options]="barChartOptions"
+        [type]="barChartType">
+      </canvas>
+    </div>
+    <div class="grafico-card">
+      <h3> 📊 Gastos por categoría (este mes)</h3>
+      <canvas baseChart
+        [data]="pieChartData"
+        [options]="pieChartOptions"
+        [type]="pieChartType">
+      </canvas>
     </div>
   </div>
 
