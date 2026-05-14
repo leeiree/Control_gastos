@@ -45,8 +45,17 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     const userStr = localStorage.getItem('user');
-    this.user = userStr ? JSON.parse(userStr) : null;
-    console.log('Usuario en dashboard:', this.user);
+    if(userStr && userStr !== 'undefined') {
+      try{
+        this.user = JSON.parse(userStr);
+        console.log('Usuario en dashboard:', this.user);
+      }catch(e){
+        console.error('Error al parsear usuario:', e);
+        localStorage.removeItem('user');
+      }
+    } else {
+      console.warn('No hay usuario en el localStorage');
+    }
 
     this.cargarDatos();
 
@@ -96,15 +105,15 @@ export class DashboardComponent implements OnInit, OnDestroy {
     console.log('==== FILTRANDO DATOS ====');
     console.log('Mes seleccionado:', this.mesSeleccionado + 1);
     console.log('Año seleccionado:', this.anioSeleccionado);
-    
+
     const gastosFiltrados = this.gastos.filter(gasto => {
-      if (!gasto.fecha) return false;
-      const partes = gasto.fecha.trim().split('/');
-      if (partes.length !== 3) return false;
-      const mes = parseInt(partes[1], 10);
-      const anio = parseInt(partes[2], 10);
-      return mes === this.mesSeleccionado + 1 && anio === this.anioSeleccionado;
-    });
+    if (!gasto || !gasto.fecha) return false;
+    const partes = gasto.fecha.split('/');
+    if (partes.length !== 3) return false;
+    const mes = parseInt(partes[1], 10);
+    const anio = parseInt(partes[2], 10);
+    return mes === this.mesSeleccionado + 1 && anio === this.anioSeleccionado;
+  });
 
     const ingresosFiltrados = this.ingresos.filter(ingreso => {
       if (!ingreso.fecha) return false;
