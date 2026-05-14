@@ -11,6 +11,10 @@ export class CategoriaService {
 
   constructor(private http: HttpClient) { }
 
+  private getUsuarioId(): string {
+    return localStorage.getItem('usuarioId') || '';
+  }
+
   getCategorias(usuarioId: string): Observable<any[]> {
     console.log('Llamando a API con usuarioId:', usuarioId);
     const params = new HttpParams().set('usuarioId', usuarioId);
@@ -20,14 +24,17 @@ export class CategoriaService {
   }
 
   createCategoria(categoria: any): Observable<any> {
-    return this.http.post(this.apiUrl, categoria);
+    const usuarioId = this.getUsuarioId();
+    return this.http.post(this.apiUrl, { ...categoria, usuarioId });
   }
 
   updateCategoria(id: string, categoria: any): Observable<any> {
-    return this.http.patch(`${this.apiUrl}/${id}`, categoria);
+    const usuarioId = this.getUsuarioId();
+    return this.http.patch(`${this.apiUrl}/${id}`, { ...categoria, usuarioId });
   }
 
-  deleteCategoria(id: string, usuarioId: string): Observable<any> {
+  deleteCategoria(id: string): Observable<any> {
+    const usuarioId = this.getUsuarioId();
     const params = new HttpParams().set('usuarioId', usuarioId);
     return this.http.delete(`${this.apiUrl}/${id}`, { params });
   }

@@ -47,7 +47,6 @@ export class IngresosComponent implements DoCheck, OnInit {
 
   constructor(
     private ingresoService: IngresoService,
-    private categoriaService: CategoriaService,
     private actualizacionService: ActualizacionService,
     private cdr: ChangeDetectorRef
   ) {}
@@ -86,27 +85,17 @@ export class IngresosComponent implements DoCheck, OnInit {
   }
 
   cargarCategorias() {
-  const usuarioId = localStorage.getItem('usuarioId');
-
-  if (!usuarioId) {
-    return;
+    this.categoriasDisponibles = [
+      'Salario',
+      'Beca',
+      'Regalo',
+      'Venta',
+      'Extra',
+      'Otros'
+    ];
+    console.log('Categorías disponibles:', this.categoriasDisponibles);
+    this.cdr.detectChanges();
   }
-
-  this.categoriaService.getCategorias(usuarioId).subscribe({
-    next: (data) => {
-      const categoriasBackend = data.map(c => c.nombre);
-
-      if (categoriasBackend.length > 0) {
-        this.categoriasDisponibles = categoriasBackend;
-      }
-
-      this.cdr.detectChanges();
-    },
-    error: (error) => {
-      console.error('Error:', error);
-    }
-  });
-}
 
   get ingresosFiltrados() {
     if (!this.ingresos || this.ingresos.length === 0) return [];

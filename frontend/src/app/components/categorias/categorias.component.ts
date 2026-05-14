@@ -175,16 +175,15 @@ export class CategoriasComponent implements DoCheck {
 
   eliminarCategoria() {
     if (this.categoriaAEliminar) {
-      const usuarioId = localStorage.getItem('usuarioId') || '';
-      this.categoriaService.deleteCategoria(this.categoriaAEliminar._id, usuarioId).subscribe({
-        next: () => {
-          this.cargarCategorias();
-          this.cerrarModalEliminar();
-        },
-        error: (error) => {
-          console.error('Error al eliminar categoría:', error);
-        }
-      });
+    this.categoriaService.deleteCategoria(this.categoriaAEliminar._id).subscribe({
+      next: () => {
+        this.cargarCategorias();
+        this.cerrarModalEliminar();
+      },
+      error: (error) => {
+        console.error('Error al eliminar:', error);
+      }
+    });
     }
   }
 
