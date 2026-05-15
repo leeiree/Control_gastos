@@ -161,6 +161,8 @@ export class DashboardComponent implements OnInit, OnDestroy, DoCheck {
   }
 
   cargarDatos() {
+    const usuarioId = localStorage.getItem('usuarioId');
+    if (!usuarioId) return;
     forkJoin({
       gastos: this.gastoService.getGastos(),
       ingresos: this.ingresosService.getIngresos()
@@ -179,6 +181,7 @@ export class DashboardComponent implements OnInit, OnDestroy, DoCheck {
     this.mesSeleccionado = Number(this.mesSeleccionado);
     this.anioSeleccionado = Number(this.anioSeleccionado);
     this.calcularTotales();
+    this.actualizarGraficoBarras();
     this.cdr.detectChanges();
   }
 
@@ -274,9 +277,9 @@ export class DashboardComponent implements OnInit, OnDestroy, DoCheck {
 
   actualizarGraficoBarras() {
     const mesesUltimos = this.obtenerUltimosMeses(6);
-    this.barChartData.labels = mesesUltimos.map(m => m.nombre);
+    const labels = mesesUltimos.map(m => m.nombre);
 
-    this.barChartData.datasets[0].data = mesesUltimos.map(mesObj =>
+    const ingresosData = mesesUltimos.map(mesObj =>
       this.ingresos.filter(i => {
         if (!i?.fecha) return false;
         const partes = i.fecha.split('/');
@@ -287,7 +290,7 @@ export class DashboardComponent implements OnInit, OnDestroy, DoCheck {
       }).reduce((sum, i) => sum + (i.cantidad || 0), 0)
     );
 
-    this.barChartData.datasets[1].data = mesesUltimos.map(mesObj =>
+    const gastosData = mesesUltimos.map(mesObj =>
       this.gastos.filter(g => {
         if (!g?.fecha) return false;
         const partes = g.fecha.split('/');
@@ -297,6 +300,14 @@ export class DashboardComponent implements OnInit, OnDestroy, DoCheck {
         return mes === mesObj.mes && anio === mesObj.anio;
       }).reduce((sum, g) => sum + (g.cantidad || 0), 0)
     );
+
+    this.barChartData = {
+      labels: labels,
+      datasets: [
+        { label: 'Ingresos', data: ingresosData, backgroundColor: '#4CAF50', borderRadius: 8, barPercentage: 0.6 },
+        { label: 'Gastos', data: gastosData, backgroundColor: '#F44336', borderRadius: 8, barPercentage: 0.6 }
+      ]
+    };
   }
 
   obtenerUltimosMeses(cantidad: number): { nombre: string; mes: number; anio: number }[] {
