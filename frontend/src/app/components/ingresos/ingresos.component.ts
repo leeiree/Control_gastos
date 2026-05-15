@@ -68,15 +68,23 @@ export class IngresosComponent implements DoCheck, OnInit {
   }
 
   cambiarFiltro() {
+    this.mesSeleccionado = Number(this.mesSeleccionado);
+    this.anioSeleccionado = Number(this.anioSeleccionado);
+
+    if(this.mesSeleccionado <0) this.mesSeleccionado = 0;
+    if(this.mesSeleccionado >11) this.mesSeleccionado = 11;
+    
     this.cdr.detectChanges();
   }
 
   cargarIngresos() {
     const usuarioId = localStorage.getItem('usuarioId');
+    console.log('Cargando ingresos desde el backend...');
     if (!usuarioId) return;
     
     this.ingresoService.getIngresos().subscribe({
       next: (data) => {
+        console.log('Ingresos recibidos:', data.length);
         this.ingresos = data;
         this.cdr.detectChanges();
       },
@@ -98,6 +106,9 @@ export class IngresosComponent implements DoCheck, OnInit {
   }
 
   get ingresosFiltrados() {
+    const mesActual = this.mesSeleccionado ?? 0;
+    const anioActual = this.anioSeleccionado ?? new Date().getFullYear();
+    
     if (!this.ingresos || this.ingresos.length === 0) return [];
     
     return this.ingresos.filter(ingreso => {

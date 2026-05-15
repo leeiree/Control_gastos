@@ -13,27 +13,10 @@ import { FooterComponent } from './components/footer/footer.component';
   styleUrl: './app.css'
 })
 export class App {
-  isLoggedIn = false;
   isDarkMode = false;
 
-  constructor(private router: Router) {
-    // Verificar si hay usuario al iniciar
-    const user = localStorage.getItem('user');
-    this.isLoggedIn = !!user;
-
-    // Escuchar cambios de navegación para actualizar el estado
-    this.router.events.subscribe(event => {
-      if (event instanceof NavigationEnd) {
-        const user = localStorage.getItem('user');
-        this.isLoggedIn = !!user;
-      }
-    });
-  }
-
-  onLoginSuccess() {
-    this.isLoggedIn = true;
-  }
-
+  constructor(public router: Router) {}
+ 
   toggleTheme() {
     this.isDarkMode = !this.isDarkMode;
     if (this.isDarkMode) {
